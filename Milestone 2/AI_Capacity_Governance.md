@@ -1,18 +1,12 @@
 This project uses AI to support laboratory personnel by interpreting OOC and trend‑violation events after they have already been detected by rule‑based logic in Power BI. AI is not used for compliance decisions or instrument control. Its role is strictly advisory and designed to help ensure that potential issues are not overlooked when staff are busy. 
 
 AI begins its work only after Power BI flags an OOC or trend violation. Within this boundary, AI is allowed to: 
-
-Summarize the detected OOC or trend violation 
-
-Compare the current event to the past 10‑day baseline 
-
-Incorporate environmental conditions such as temperature, humidity, and baseline stability 
-
-Identify possible causes (e.g., instrument bias, standard cylinder degradation 
-
-Suggest recommended next steps 
-
-Recommend monitoring when the issue appears minor 
+- Summarize the detected OOC or trend violation 
+- Compare the current event to the past 10‑day baseline 
+- Incorporate environmental conditions such as temperature, humidity, and baseline stability 
+- Identify possible causes (e.g., instrument bias, standard cylinder degradation 
+- Suggest recommended next steps 
+- Recommend monitoring when the issue appears minor 
 
 Recommend investigation when the issue appears significant 
 
