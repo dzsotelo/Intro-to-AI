@@ -14,40 +14,42 @@ All data is **synthetic**. No real lab, company, or customer data is used.
 
 ---
 
-## Repository Files & Milestone 3 Usage
+## Files and how they will be used
 
-| File / Folder | Milestone Role | How It Was Used in Milestone 3 |
+| File | Assignment part | How it is used in Milestone 3 |
 |---|---|---|
-| `PowerBI/` (`.pbix` / `.pbip`) | Core Prototype | Implemented SPC control charts, OOC/trend rule logic, data-quality filtering, and the user-triggered review action |
-| `PowerAutomate/` | Core Prototype | Orchestrated the conditional flow bundling flagged Power BI events with `DailyLogs.xlsx` for AI review |
-| `01_Representative_Input_Data.md` | Input Spec | Documents input schemas, control limits, and planted test scenarios |
-| `data/Raw Data/` (90 runs, 6 scenario folders) | Input Data | Primary synthetic GC2 dataset loaded into Power BI (Get Data → Folder) |
-| `data/Instrument Component List.xlsx`, `data/Lab Standard.xlsx` | Reference Data | Peak mapping and fixed control limits for rule-based detection |
-| `data/DailyLogs.xlsx` | Context Data | Room temperature and humidity notes appended to the AI payload for flagged events only |
-| `data/csv/` | Reference Copies | CSV copies of datasets and answer keys viewable directly on GitHub |
-| `02_Expected_Results.md`, `data/Expected_Results_Reference.xlsx` | Validation Key | Ground-truth flags for all 450 readings and 3 AI events used to verify Power BI accuracy (**never sent to the AI**) |
-| `05_Detection_Rules.md` | Rule Logic | Exact mathematical definitions implemented in Power BI |
-| `06_AI_Review_Prompt_and_Reference_Outputs.md` | AI Prompting | Structured AI input payload, system prompt, and acceptable/unacceptable scoring benchmarks |
-| `03_Testing_Plan.md` & `data/AI_Review_Log.xlsx` | Testing & Logging | Executed all 6 test cases (straightforward, challenging, invalid/missing data), logged PASS/FAIL results, and scored AI outputs |
-| `04_Finalized_Prototype_Scope.md`, `01_AI_Capacity_Governance.md`, `01_KPIs.md` | Governance & Scope | Enforced prototype boundaries, advisory-only AI guardrails, and evaluation metrics |
-| `00_Revision_Notes.md`, `07_Toolchain_Access_Check.md` | Documentation | Milestone 2 feedback responses and verified Microsoft/Gemini toolchain configuration |
-| `scripts/` | Optional Utilities | Scripts used to generate synthetic data and verify answer keys |
+| `01_Representative_Input_Data.md` | 1 – Input data | Describes every data file, its columns, the control limits, and what is planted in each test scenario |
+| `data/Raw Data/` (90 runs, 6 scenario folders) | 1 – Input data | Primary input loaded into Power BI (Get Data → Folder) |
+| `data/Instrument Component List.xlsx`, `data/Lab Standard.xlsx` | 1 – Input data | Peak mapping and fixed control limits for the detection rules |
+| `data/DailyLogs.xlsx` | 1 – Input data | Environmental context added to the AI payload for flagged events only |
+| `data/csv/` | 1 & 2 | CSV copies of the data and answer key, viewable directly on GitHub |
+| `02_Expected_Results.md`, `data/Expected_Results_Reference.xlsx` | 2 – Expected results | Answer key: expected flags for all 450 readings and the 3 AI events. Power BI output is checked against it. **Never sent to the AI.** |
+| `05_Detection_Rules.md` | 2 – Expected results | Exact rule definitions behind the answer key |
+| `06_AI_Review_Prompt_and_Reference_Outputs.md` | 2 – Expected results | AI input payload, prompt, and reference "acceptable / unacceptable" AI responses |
+| `03_Testing_Plan.md` | 3 – Testing plan | 6 test cases (straightforward, challenging, missing info / expected failure), how incorrect results are recognized, AI scoring checklist |
+| `data/AI_Review_Log.xlsx` | 3 – Testing plan | Review log, test-results (auto PASS/FAIL), and AI scoring sheets |
+| `04_Finalized_Prototype_Scope.md` | 4 – Scope | What Milestone 3 will build |
+| `01_AI_Capacity_Governance.md`, `01_KPIs.md` | Supporting | What the AI may and may not do; KPIs |
+| `07_Toolchain_Access_Check.md` | Supporting | Confirms which Microsoft/Gemini tools the team can actually use |
+| `scripts/` | Optional | Regenerates the synthetic data and verifies the answer key (no code was required for this milestone) |
 
 ---
 
-## Scope Refinements Implemented in Milestone 3
-- **Single-Instrument Focus:** Scoped to **one GC2 instrument, one SPC workflow, and one conditional AI-review path**.
-- **User-Triggered Execution:** AI review is triggered on demand via a **"Review selected event"** action in Power BI rather than unattended background polling.
-- **Data-Quality Isolation:** Invalid or missing data triggers a separate **data-quality flag** and is blocked from reaching the AI.
-- **Advisory-Only Output:** Every AI summary includes observations, uncertainty caveats, and suggested checks, saved to `AI_Review_Log.xlsx` for mandatory human sign-off.
-- **Toolchain Fallback:** Supports direct Power Automate → AI Builder execution with a verified fallback path (Power BI → Gemini → `AI_Review_Log.xlsx`) where AI Builder licensing is restricted.
+## Changes to project scope (after feedback)
+- Narrowed to **one GC2 instrument, one SPC workflow, one conditional AI-review path**.
+- AI review is **user-triggered** from a "Review selected event" button in Power BI. It is not unattended monitoring.
+- **Invalid data is now a separate data-quality flag** and never goes to AI. Only OOC or trend events do.
+- AI output is **advisory only** (summary, observations, uncertainty, suggested human checks) and is saved to a review log for human sign-off.
+- Fallback if AI Builder isn't licensed: Power BI → manual export to Gemini → same Excel review log.
+
+See `00_Revision_Notes.md` for a point-by-point response to the Milestone 2 feedback.
 
 ---
 
 ## Soft Launch, Current Limitations & Next Steps
 
 ### Soft Launch & Validation Plan
-To validate accuracy and reliability before full production deployment, the prototype is designed for a **2–4 week soft launch in shadow mode** alongside normal lab operations. During shadow mode, the pipeline processes incoming GC2 runs and generates AI summaries in the background without affecting live batch decisions. Lab analysts review the exact same runs manually so the team can benchmark alert precision, catch false alarms, and confirm that Power BI, Power Automate, and the AI layer remain stable under daily lab workloads.
+Before full deployment, the prototype will run in **shadow mode for 2–4 weeks** alongside normal lab operations. The pipeline processes incoming GC2 runs and generates AI summaries in the background without affecting live decisions, while analysts review the same runs manually to benchmark alert accuracy, catch false alarms, and verify system reliability under daily workloads.
 
 ### Current Prototype Limitations & Human Review
 Even with Milestone 3 features in place, human oversight remains mandatory in four areas:
@@ -60,4 +62,3 @@ Even with Milestone 3 features in place, human oversight remains mandatory in fo
 If development continues beyond Milestone 3, priority upgrades include:
 1. **Self-Adjusting Alerts:** Using analyst feedback logged in `AI_Review_Log.xlsx` to automatically refine prompt examples and tune alert thresholds over time.
 2. **Early-Warning Drift Forecasting:** Moving beyond reactive rule violations to flag subtle baseline drift before a run crosses critical control limits.
-3. **Direct LIMS Integration:** Automatically pushing manager-approved AI summaries from the review log into the Laboratory Information Management System (LIMS) to eliminate manual compliance data entry.
