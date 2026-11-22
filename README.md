@@ -35,17 +35,6 @@ All data is **synthetic**. No real lab, company, or customer data is used.
 
 ---
 
-## Changes to project scope (after feedback)
-- Narrowed to **one GC2 instrument, one SPC workflow, one conditional AI-review path**.
-- AI review is **user-triggered** from a "Review selected event" button in Power BI. It is not unattended monitoring.
-- **Invalid data is now a separate data-quality flag** and never goes to AI. Only OOC or trend events do.
-- AI output is **advisory only** (summary, observations, uncertainty, suggested human checks) and is saved to a review log for human sign-off.
-- Fallback if AI Builder isn't licensed: Power BI → manual export to Gemini → same Excel review log.
-
-See `00_Revision_Notes.md` for a point-by-point response to the Milestone 2 feedback.
-
----
-
 ## Soft Launch, Current Limitations & Next Steps
 
 ### Soft Launch & Validation Plan
